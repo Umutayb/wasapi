@@ -1,0 +1,10 @@
+.idea/vcs.xml
+/out/
+/.idea/
+POM-Framework.iml
+*.iml
+.DS_Store
+/inbox/
+src/test/resources/filePDF.pdf
+src/test/resources/secret.properties
+/target/

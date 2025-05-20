@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-foodplanner
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: zan
+      MONGO_INITDB_ROOT_PASSWORD: Jbowmy0JFri54by
+      MONGO_INITDB_DATABASE: food-planner
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    networks:
+      - my-network
+
+  food-planner:
+    image: food-planner:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: food-planner
+      SPRING_DATA_MONGODB_DATABASE: food-planner
+      SPRING_DATA_MONGODB_URI: mongodb://zan:Jbowmy0JFri54by@mongodb:27017/food-planner?authSource=admin
+      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin # Added authentication database
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
+      SERVER_PORT: 8080
+    networks:
+      - my-network
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
+
+networks:
+  my-network:
+    driver: bridge

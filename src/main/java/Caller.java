@@ -1,23 +1,24 @@
-import api_assured.exceptions.FailedCallException;
+
+import exceptions.FailedCallException;
 import collections.ResponsePair;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.ResponseBody;
 import okio.Buffer;
 import properties.PropertyUtilities;
 import retrofit2.Call;
 import retrofit2.Response;
-import utils.Printer;
-import utils.StringUtilities;
+import utils.*;
 import utils.mapping.MappingUtilities;
-import utils.reflection.ReflectionUtilities;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-import static utils.FileUtilities.Json.*;
+import static utils.mapping.MappingUtilities.Json.*;
 import static utils.reflection.ReflectionUtilities.getPreviousMethodName;
 import static utils.StringUtilities.Color.*;
+import static utils.reflection.ReflectionUtilities.isOfType;
 
 /**
  * This abstract class represents a caller that performs API calls, logs the results and returns objects in response bodies.
@@ -34,7 +35,7 @@ public abstract class Caller {
     /**
      * A static boolean variable that determines whether logs should be kept for API calls.
      */
-    protected static boolean keepLogs;
+    public static boolean keepLogs;
 
     /**
      * A Printer object for logging.
@@ -151,9 +152,9 @@ public abstract class Caller {
             log.warning("The response code is: " + response.code());
             if (response.message().length()>0) log.warning(response.message());
             if (response.errorBody() != null && printBody) {
-                Object errorBody = ReflectionUtilities.isOfType(response, Object.class) ?
+                Object errorBody =  isOfType(response, Object.class) ?
                         getJsonString(getErrorObject(response, Object.class)) :
-                        response.raw();
+                        response.errorBody().string();
                 String errorLog = errorBody.equals("null") ?
                         "The error body is empty." :
                         "The error body is: \n" + errorBody;
@@ -162,6 +163,48 @@ public abstract class Caller {
             return Response.error(response.errorBody(), response.raw());
         }
     }
+
+    ///**
+    // * Clones and logs the given response.
+    // *
+    // * @param call        The original call to execute and log.
+    // * @param printBody   Flag to indicate whether the response body should be logged.
+    // * @return            A new cloned response object.
+    // */
+    //private static Response<ResponseBody> getResponse(Call<okhttp3.ResponseBody> call, boolean printBody) throws IOException {
+    //    Response<ResponseBody> response = call.execute();
+    //    if (response.isSuccessful()) {
+    //        String contentType = response.headers().get("content-type");
+    //        boolean printableResponse = contentType != null && contentType.contains("application/json");
+    //        ResponseBody body = response.body();
+    //        if (keepLogs) log.success("The response code is: " + response.code());
+    //        if (keepLogs && !response.message().isEmpty()) log.info(response.message());
+    //        if (printBody && printableResponse) {
+    //            Object responseBody =  isOfType(response, Object.class) ?
+    //                    getJsonString(getErrorObject(response, Object.class)) :
+    //                    response.raw();
+    //            String errorLog = responseBody.equals("null") ?
+    //                    "The response body is empty." :
+    //                    "The response body is: \n" + responseBody;
+    //            log.warning(errorLog);
+    //        }
+    //        return Response.success(body, response.raw());
+    //    }
+    //    else {
+    //        log.warning("The response code is: " + response.code());
+    //        if (response.message().length()>0) log.warning(response.message());
+    //        if (response.errorBody() != null && printBody) {
+    //            Object errorBody =  isOfType(response, Object.class) ?
+    //                    getJsonString(getErrorObject(response, Object.class)) :
+    //                    response.raw();
+    //            String errorLog = errorBody.equals("null") ?
+    //                    "The error body is empty." :
+    //                    "The error body is: \n" + errorBody;
+    //            log.warning(errorLog);
+    //        }
+    //        return Response.error(response.errorBody(), response.raw());
+    //    }
+    //}
 
     /**
      * Extracts the error object from the given response and attempts to deserialize it into the specified model.
@@ -175,7 +218,7 @@ public abstract class Caller {
      * @return A deserialized error object instance of type {@code Model}.
      * @throws RuntimeException if there's an issue processing the error content or deserializing it.
      *
-     * @see utils.mapping.MappingUtilities.Json#fromJsonString(String, Class)
+     * @see MappingUtilities.Json#fromJsonString(String, Class)
      */
     @SuppressWarnings("unchecked")
     private static <ErrorModel> ErrorModel getErrorObject(Response<?> response, Class<ErrorModel> errorModel) throws JsonProcessingException {
@@ -187,7 +230,7 @@ public abstract class Caller {
             if (!StringUtilities.isBlank(bodyString)) {
                 if (errorModel.isAssignableFrom(String.class))
                     return (ErrorModel) bodyString;
-                else return MappingUtilities.Json.fromJsonString(bodyString, errorModel);
+                else return fromJsonString(bodyString, errorModel);
             }
             else
                 return null;
@@ -253,8 +296,8 @@ public abstract class Caller {
      * @return A deserialized error model instance of type {@code ErrorModel} if a match is found.
      * @throws RuntimeException if none of the provided error models match the error content of the response.
      *
-     * @see utils.mapping.MappingUtilities.Json#fromJsonString(String, Class)
-     * @see utils.mapping.MappingUtilities.Json#getJsonStringFor(Object)
+     * @see MappingUtilities.Json#fromJsonString(String, Class)
+     * @see MappingUtilities.Json#getJsonStringFor(Object)
      * @see #getErrorObject(Response, Class)
      */
     @SuppressWarnings("unchecked")
