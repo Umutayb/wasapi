@@ -154,7 +154,7 @@ public abstract class Caller {
             if (response.errorBody() != null && printBody) {
                 Object errorBody =  isOfType(response, Object.class) ?
                         getJsonString(getErrorObject(response, Object.class)) :
-                        response.errorBody().string();
+                        response.raw();
                 String errorLog = errorBody.equals("null") ?
                         "The error body is empty." :
                         "The error body is: \n" + errorBody;
