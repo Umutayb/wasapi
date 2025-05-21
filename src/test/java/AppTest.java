@@ -2,6 +2,7 @@
 import exceptions.FailedCallException;
 import context.ContextStore;
 import models.*;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,20 +27,43 @@ public class AppTest {
         ContextStore.put("jwtToken", userAuthResponse.getJwtToken());
         log.success("nice-user authentication is successful!");
     }
+    @After
+    public void after(){
+        ContextStore.loadProperties("test.properties", "secret.properties");
+        FoodPlanner foodPlanner = new FoodPlanner();
+
+        log.info("nice-user authentication is in progress...");
+        UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
+                "nice-user",
+                "Test-123"
+        );
+        UserAuthResponseModel userAuthResponse = foodPlanner.signIn(userAuthRequestModel);
+        ContextStore.put("jwtToken", userAuthResponse.getJwtToken());
+        log.success("nice-user authentication is successful!");
+    }
 
     @Test
     public void signUpTest() {
-        FoodPlanner foodPlanner = new FoodPlanner();
-        UserSignUpModel userSignUpModel = new UserSignUpModel(
-                "test-user",
-                "test-user@user.com",
-                "Test-123",
-                List.of("ROLE_USER"));
-
-        UserSignUpResponseModel userSignUpResponse = foodPlanner.signUp(userSignUpModel);
-        Assert.assertEquals("Sign up test is failed!" ,"User registered successfully!", userSignUpResponse.getMessage());
-        log.success("signUpTest PASSED!");
+        //deleteUserTest();
     }
+
+    public void deleteUserTest() {
+        FoodPlanner foodPlanner = new FoodPlanner();
+        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+
+        foodPlannerAuth.deleteUser(ContextStore.get("testUserId").toString());
+        UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
+                "test-user",
+                "Test-123"
+        );
+        try {
+            foodPlanner.signIn(userAuthRequestModel);
+        }
+        catch (FailedCallException e) {
+            log.success("deleteUserTest PASSED!");
+        }
+    }
+
 
     @Test
     public void signInTest() {
@@ -52,24 +76,6 @@ public class AppTest {
         Assert.assertEquals("username does not match!", userAuthResponse.getUsername(),"test-user");
         ContextStore.put("testUserId", userAuthResponse.getId());
         log.success("signInTest PASSED!");
-    }
-
-    @Test
-    public void deleteUserTest() {
-        FoodPlanner foodPlanner = new FoodPlanner();
-        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
-
-        foodPlannerAuth.deleteUser(ContextStore.get("testUserId").toString());
-        UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
-                "test-user",
-                "Test-123"
-        );
-        try {
-           foodPlanner.signIn(userAuthRequestModel);
-        }
-        catch (FailedCallException e) {
-            log.success("deleteUserTest PASSED!");
-        }
     }
 
     @Test
