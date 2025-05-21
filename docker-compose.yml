@@ -17,17 +17,17 @@ services:
       - my-network
 
   food-planner:
-    image: zanmaster/food-planner:latest
+    image: food-planner:latest
     restart: unless-stopped
     ports:
-      - "5001:5001"
+      - "8080:8080"
     environment:
       SPRING_APPLICATION_NAME: food-planner
       SPRING_DATA_MONGODB_DATABASE: food-planner
       SPRING_DATA_MONGODB_URI: mongodb://zan:Jbowmy0JFri54by@mongodb:27017/food-planner?authSource=admin
       SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin # Added authentication database
       LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
-      SERVER_PORT: 5001
+      SERVER_PORT: 8080
     networks:
       - my-network
     depends_on:

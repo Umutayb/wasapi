@@ -1,6 +1,6 @@
 package models;
 
-public class UserSignUpResponseModel {
+public class SimpleMessageResponseModel {
     String message;
 
     public String getMessage() {

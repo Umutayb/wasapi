@@ -29,22 +29,21 @@ public class AppTest {
     }
     @After
     public void after(){
-        ContextStore.loadProperties("test.properties", "secret.properties");
-        FoodPlanner foodPlanner = new FoodPlanner();
-
-        log.info("nice-user authentication is in progress...");
-        UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
-                "nice-user",
-                "Test-123"
-        );
-        UserAuthResponseModel userAuthResponse = foodPlanner.signIn(userAuthRequestModel);
-        ContextStore.put("jwtToken", userAuthResponse.getJwtToken());
-        log.success("nice-user authentication is successful!");
+        //deleteUserTest();
     }
 
     @Test
     public void signUpTest() {
-        //deleteUserTest();
+        FoodPlanner foodPlanner = new FoodPlanner();
+        UserSignUpModel userSignUpModel = new UserSignUpModel(
+                "test-user",
+                "test-user@user.com",
+                "Test-123",
+                List.of("ROLE_USER"));
+
+        SimpleMessageResponseModel userSignUpResponse = foodPlanner.signUp(userSignUpModel);
+        Assert.assertEquals("Sign up test is failed!" ,"User registered successfully!", userSignUpResponse.getMessage());
+        log.success("signUpTest PASSED!");
     }
 
     public void deleteUserTest() {
@@ -118,6 +117,21 @@ public class AppTest {
         log.success("Added food is verified! -> Rice");
 
         log.success("addFoodTest PASSED!");
+    }
+
+    @Test
+    public void logoutTest() {
+        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+        SimpleMessageResponseModel logoutResponse = foodPlannerAuth.logout();
+        Assert.assertEquals("Logout message does not match!", "Logged out successfully", logoutResponse.getMessage());
+        log.success("Logout message is validated!");
+
+        GetUserResponseModel.Food.Ingredient ingredient = new GetUserResponseModel.Food.Ingredient("rice", 1, "1");
+        GetUserResponseModel.Food food = new GetUserResponseModel.Food("FailTest", "failtest", List.of(ingredient), List.of("Pasta"), "Main", true, "test rice");
+        try {
+            foodPlannerAuth.addFood(food);
+        } catch (FailedCallException e) { log.success("logoutTest PASSED!");}
+
     }
 
 }

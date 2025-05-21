@@ -11,9 +11,9 @@ public class FoodPlanner extends ApiUtilities {
             .printHeaders(true)
             .generate(FoodPlannerServices.class);
 
-    public UserSignUpResponseModel signUp(UserSignUpModel userSignUpModel){
+    public SimpleMessageResponseModel signUp(UserSignUpModel userSignUpModel){
         log.info("Signing up a new user");
-        Call<UserSignUpResponseModel> signUpCall = petStoreServices.signUp(userSignUpModel);
+        Call<SimpleMessageResponseModel> signUpCall = petStoreServices.signUp(userSignUpModel);
         return perform(signUpCall, true, true);
     }
 
@@ -45,21 +45,27 @@ public class FoodPlanner extends ApiUtilities {
             Call<GetUserResponseModel> getUserCall = petStoreServicesAuth.getUser();
             return perform(getUserCall, true, true);
         }
+
+        public SimpleMessageResponseModel logout(){
+            log.info("Logging out the user...");
+            Call<SimpleMessageResponseModel> logoutUserCall = petStoreServicesAuth.logout();
+            return perform(logoutUserCall, true, true);
+        }
     }
 
     public interface FoodPlannerServices {
 
-        String BASE_URL = "http://localhost:5001/";
+        String BASE_URL = "http://localhost:8080/";
 
         @POST("/api/auth/signin")
         Call<UserAuthResponseModel> signIn(@Body UserAuthRequestModel userAuthRequestModel);
 
         @POST("/api/auth/signup")
-        Call<UserSignUpResponseModel> signUp(@Body UserSignUpModel userSignUpModel);
+        Call<SimpleMessageResponseModel> signUp(@Body UserSignUpModel userSignUpModel);
 
         interface Authorized {
 
-            String BASE_URL = "http://localhost:5001/";
+            String BASE_URL = "http://localhost:8080/";
 
             @POST("/api/user/add-food")
             Call<GetUserResponseModel> addFood(@Body GetUserResponseModel.Food foodModel);
@@ -69,6 +75,9 @@ public class FoodPlanner extends ApiUtilities {
 
             @GET("/api/user")
             Call<GetUserResponseModel> getUser();
+
+            @GET("/api/logout")
+            Call<SimpleMessageResponseModel> logout();
         }
     }
 
