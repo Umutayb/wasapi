@@ -2,10 +2,7 @@
 import exceptions.FailedCallException;
 import context.ContextStore;
 import models.*;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import utils.*;
 import java.util.List;
 
@@ -27,32 +24,33 @@ public class AppTest {
         ContextStore.put("jwtToken", userAuthResponse.getJwtToken());
         log.success("nice-user authentication is successful!");
     }
-    @After
-    public void after(){
-        //deleteUserTest();
-    }
 
     @Test
-    public void signUpTest() {
+    public void deleteUserTest() {
         FoodPlanner foodPlanner = new FoodPlanner();
+        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+        String deleteUser = StringUtilities.generateRandomString("user", 9, false, true);
+        ContextStore.put("deleteUser", deleteUser);
         UserSignUpModel userSignUpModel = new UserSignUpModel(
-                "test-user",
-                "test-user@user.com",
+                deleteUser,
+                deleteUser + "@user.com",
                 "Test-123",
                 List.of("ROLE_USER"));
 
         SimpleMessageResponseModel userSignUpResponse = foodPlanner.signUp(userSignUpModel);
         Assert.assertEquals("Sign up test is failed!" ,"User registered successfully!", userSignUpResponse.getMessage());
-        log.success("signUpTest PASSED!");
-    }
 
-    public void deleteUserTest() {
-        FoodPlanner foodPlanner = new FoodPlanner();
-        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+        log.info("nice-user authentication is in progress...");
+        UserAuthRequestModel deleteUserAuthRequestModel = new UserAuthRequestModel(
+                deleteUser,
+                "Test-123"
+        );
+        UserAuthResponseModel deleteUserAuthResponse = foodPlanner.signIn(deleteUserAuthRequestModel);
+        log.success("Signed in as deleteUser -> " + deleteUser);
 
-        foodPlannerAuth.deleteUser(ContextStore.get("testUserId").toString());
+        foodPlannerAuth.deleteUser(deleteUserAuthResponse.getId());
         UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
-                "test-user",
+                deleteUserAuthResponse.getUsername(),
                 "Test-123"
         );
         try {
@@ -63,16 +61,31 @@ public class AppTest {
         }
     }
 
+    @Test
+    public void signUpTest() {
+        FoodPlanner foodPlanner = new FoodPlanner();
+        String randomUsername = StringUtilities.generateRandomString("user", 9, false, true);
+        ContextStore.put("randomUsername", randomUsername);
+        UserSignUpModel userSignUpModel = new UserSignUpModel(
+                randomUsername,
+                randomUsername + "@user.com",
+                "Test-123",
+                List.of("ROLE_USER"));
+
+        SimpleMessageResponseModel userSignUpResponse = foodPlanner.signUp(userSignUpModel);
+        Assert.assertEquals("Sign up test is failed!" ,"User registered successfully!", userSignUpResponse.getMessage());
+        log.success("signUpTest PASSED!");
+    }
 
     @Test
     public void signInTest() {
         FoodPlanner foodPlanner = new FoodPlanner();
         UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
-                "test-user",
+                ContextStore.get("randomUsername"),
                 "Test-123"
         );
         UserAuthResponseModel userAuthResponse = foodPlanner.signIn(userAuthRequestModel);
-        Assert.assertEquals("username does not match!", userAuthResponse.getUsername(),"test-user");
+        Assert.assertEquals("username does not match!", ContextStore.get("randomUsername"), userAuthResponse.getUsername());
         ContextStore.put("testUserId", userAuthResponse.getId());
         log.success("signInTest PASSED!");
     }
@@ -102,9 +115,11 @@ public class AppTest {
     @Test
     public void addFoodTest() {
         FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+        String randomFoodName = StringUtilities.generateRandomString("food", 7, true, false);
+
 
         GetUserResponseModel.Food.Ingredient ingredient = new GetUserResponseModel.Food.Ingredient("rice", 1, "1");
-        GetUserResponseModel.Food food = new GetUserResponseModel.Food("Rice", "seven", List.of(ingredient), List.of("Pasta"), "Main", true, "test rice");
+        GetUserResponseModel.Food food = new GetUserResponseModel.Food(randomFoodName, "randomFood", List.of(ingredient), List.of("Pasta"), "Main", true, "test rice");
         GetUserResponseModel responseModel = foodPlannerAuth.addFood(food);
 
         Assert.assertEquals("Username does not match!", responseModel.getUsername(),"nice-user");
@@ -121,13 +136,38 @@ public class AppTest {
 
     @Test
     public void logoutTest() {
+        FoodPlanner foodPlanner = new FoodPlanner();
         FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+
+        String logoutUser = StringUtilities.generateRandomString("user", 9, false, true);
+        ContextStore.put("logoutUser", logoutUser);
+        UserSignUpModel userSignUpModel = new UserSignUpModel(
+                logoutUser,
+                logoutUser + "@user.com",
+                "Test-123",
+                List.of("ROLE_USER"));
+
+        SimpleMessageResponseModel userSignUpResponse = foodPlanner.signUp(userSignUpModel);
+        Assert.assertEquals("Sign up test is failed!" ,"User registered successfully!", userSignUpResponse.getMessage());
+        log.success("Signed in as logoutUser -> " + logoutUser);
+
+
+        UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
+                ContextStore.get("logoutUser"),
+                "Test-123"
+        );
+
+        UserAuthResponseModel userAuthResponse = foodPlanner.signIn(userAuthRequestModel);
         SimpleMessageResponseModel logoutResponse = foodPlannerAuth.logout();
+        ContextStore.update("jwtToken", userAuthResponse.getJwtToken());
+
         Assert.assertEquals("Logout message does not match!", "Logged out successfully", logoutResponse.getMessage());
         log.success("Logout message is validated!");
 
+        String randomFoodName = StringUtilities.generateRandomString("food", 7, true, false);
+
         GetUserResponseModel.Food.Ingredient ingredient = new GetUserResponseModel.Food.Ingredient("rice", 1, "1");
-        GetUserResponseModel.Food food = new GetUserResponseModel.Food("FailTest", "failtest", List.of(ingredient), List.of("Pasta"), "Main", true, "test rice");
+        GetUserResponseModel.Food food = new GetUserResponseModel.Food(randomFoodName, "randomFood", List.of(ingredient), List.of("Pasta"), "Main", true, "test rice");
         try {
             foodPlannerAuth.addFood(food);
         } catch (FailedCallException e) { log.success("logoutTest PASSED!");}
