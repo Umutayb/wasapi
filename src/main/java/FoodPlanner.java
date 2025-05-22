@@ -55,7 +55,7 @@ public class FoodPlanner extends ApiUtilities {
 
     public interface FoodPlannerServices {
 
-        String BASE_URL = "http://localhost:8080/";
+        String BASE_URL = "http://localhost:5001/";
 
         @POST("/api/auth/signin")
         Call<UserAuthResponseModel> signIn(@Body UserAuthRequestModel userAuthRequestModel);
@@ -65,7 +65,7 @@ public class FoodPlanner extends ApiUtilities {
 
         interface Authorized {
 
-            String BASE_URL = "http://localhost:8080/";
+            String BASE_URL = "http://localhost:5001/";
 
             @POST("/api/user/add-food")
             Call<GetUserResponseModel> addFood(@Body GetUserResponseModel.Food foodModel);
