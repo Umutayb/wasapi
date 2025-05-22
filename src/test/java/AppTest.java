@@ -29,7 +29,12 @@ public class AppTest {
     public void deleteUserTest() {
         FoodPlanner foodPlanner = new FoodPlanner();
         FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
-        String deleteTestUser = StringUtilities.generateRandomString("user", 9, false, true);
+        String deleteTestUser = StringUtilities.generateRandomString(
+                "user",
+                9,
+                false,
+                true
+        );
         ContextStore.put("deleteTestUser", deleteTestUser);
         UserSignUpModel userSignUpModel = new UserSignUpModel(
                 deleteTestUser,
@@ -57,7 +62,12 @@ public class AppTest {
     @Test
     public void signUpTest() {
         FoodPlanner foodPlanner = new FoodPlanner();
-        String randomUsername = StringUtilities.generateRandomString("user", 9, false, true);
+        String randomUsername = StringUtilities.generateRandomString(
+                "user",
+                9,
+                false,
+                true
+        );
         ContextStore.put("randomUsername", randomUsername);
         UserSignUpModel userSignUpModel = new UserSignUpModel(
                 randomUsername,
@@ -108,11 +118,26 @@ public class AppTest {
     @Test
     public void addFoodTest() {
         FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
-        String randomFoodName = StringUtilities.generateRandomString("food", 7, true, false);
-
-
-        GetUserResponseModel.Food.Ingredient ingredient = new GetUserResponseModel.Food.Ingredient("rice", 1, "1");
-        GetUserResponseModel.Food food = new GetUserResponseModel.Food(randomFoodName, "randomFood", List.of(ingredient), List.of("Pasta"), "Main", true, "test rice");
+        String randomFoodName = StringUtilities.generateRandomString(
+                "food",
+                7,
+                true,
+                false
+        );
+        GetUserResponseModel.Food.Ingredient ingredient = new GetUserResponseModel.Food.Ingredient(
+                "rice",
+                1,
+                "1"
+        );
+        GetUserResponseModel.Food food = new GetUserResponseModel.Food(
+                randomFoodName,
+                "randomFood",
+                List.of(ingredient),
+                List.of("Pasta"),
+                "Main",
+                true,
+                "test recipe 01"
+        );
         GetUserResponseModel responseModel = foodPlannerAuth.addFood(food);
 
         Assert.assertEquals("Username does not match!", responseModel.getUsername(),"nice-user");
@@ -132,7 +157,12 @@ public class AppTest {
         FoodPlanner foodPlanner = new FoodPlanner();
         FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
 
-        String logoutUser = StringUtilities.generateRandomString("user", 9, false, true);
+        String logoutUser = StringUtilities.generateRandomString(
+                "user",
+                9,
+                false,
+                true
+        );
         ContextStore.put("logoutUser", logoutUser);
         UserSignUpModel userSignUpModel = new UserSignUpModel(
                 logoutUser,
@@ -151,17 +181,33 @@ public class AppTest {
         );
 
         UserAuthResponseModel userAuthResponse = foodPlanner.signIn(userAuthRequestModel);
-        SimpleMessageResponseModel logoutResponse = foodPlannerAuth.logout();
         ContextStore.update("jwtToken", userAuthResponse.getJwtToken());
 
+        SimpleMessageResponseModel logoutResponse = foodPlannerAuth.logout();
         Assert.assertEquals("Logout message does not match!", "Logged out successfully", logoutResponse.getMessage());
         log.success("Logout message is validated!");
 
-        String randomFoodName = StringUtilities.generateRandomString("food", 7, true, false);
-
-        GetUserResponseModel.Food.Ingredient ingredient = new GetUserResponseModel.Food.Ingredient("rice", 1, "1");
-        GetUserResponseModel.Food food = new GetUserResponseModel.Food(randomFoodName, "randomFood", List.of(ingredient), List.of("Pasta"), "Main", true, "test rice");
         try {
+            String randomFoodName = StringUtilities.generateRandomString(
+                    "food",
+                    7,
+                    true,
+                    false
+            );
+            GetUserResponseModel.Food.Ingredient ingredient = new GetUserResponseModel.Food.Ingredient(
+                    "rice",
+                    1,
+                    "1"
+            );
+            GetUserResponseModel.Food food = new GetUserResponseModel.Food(
+                    randomFoodName,
+                    "randomFood",
+                    List.of(ingredient),
+                    List.of("Pasta"),
+                    "Main",
+                    true,
+                    "test recipe 02"
+            );
             foodPlannerAuth.addFood(food);
         } catch (FailedCallException e) { log.success("logoutTest PASSED!");}
 
