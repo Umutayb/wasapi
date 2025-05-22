@@ -34,10 +34,16 @@ public class FoodPlanner extends ApiUtilities {
             return perform(checkCall, true, true);
         }
 
-        public void deleteUser(String userId){
+        public SimpleMessageResponseModel deleteUserWithId(String userId){
             log.info("Deleting the user with id: " + userId);
-            Call<Void> deleteUserCall = petStoreServicesAuth.deleteUser(userId);
-            getResponseForCode(30, 200, deleteUserCall);
+            Call<SimpleMessageResponseModel> deleteUserCall = petStoreServicesAuth.deleteUserWithId(userId);
+            return perform(deleteUserCall, true, true);
+        }
+
+        public SimpleMessageResponseModel deleteUserWithUsername(String username){
+            log.info("Deleting the user named " + username);
+            Call<SimpleMessageResponseModel> deleteUserCall = petStoreServicesAuth.deleteUserWithUsername(username);
+            return perform(deleteUserCall, true, true);
         }
 
         public GetUserResponseModel getUser(){
@@ -71,7 +77,10 @@ public class FoodPlanner extends ApiUtilities {
             Call<GetUserResponseModel> addFood(@Body GetUserResponseModel.Food foodModel);
 
             @DELETE("/api/auth/{userId}/delete")
-            Call<Void> deleteUser(@Path("userId") String userId);
+            Call<SimpleMessageResponseModel> deleteUserWithId(@Path("userId") String userId);
+
+            @DELETE("/api/auth/user/{username}/delete")
+            Call<SimpleMessageResponseModel> deleteUserWithUsername(@Path("username") String username);
 
             @GET("/api/user")
             Call<GetUserResponseModel> getUser();

@@ -29,36 +29,29 @@ public class AppTest {
     public void deleteUserTest() {
         FoodPlanner foodPlanner = new FoodPlanner();
         FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
-        String deleteUser = StringUtilities.generateRandomString("user", 9, false, true);
-        ContextStore.put("deleteUser", deleteUser);
+        String deleteTestUser = StringUtilities.generateRandomString("user", 9, false, true);
+        ContextStore.put("deleteTestUser", deleteTestUser);
         UserSignUpModel userSignUpModel = new UserSignUpModel(
-                deleteUser,
-                deleteUser + "@user.com",
+                deleteTestUser,
+                deleteTestUser + "@user.com",
                 "Test-123",
                 List.of("ROLE_USER"));
 
         SimpleMessageResponseModel userSignUpResponse = foodPlanner.signUp(userSignUpModel);
         Assert.assertEquals("Sign up test is failed!" ,"User registered successfully!", userSignUpResponse.getMessage());
 
-        log.info("nice-user authentication is in progress...");
-        UserAuthRequestModel deleteUserAuthRequestModel = new UserAuthRequestModel(
-                deleteUser,
-                "Test-123"
-        );
-        UserAuthResponseModel deleteUserAuthResponse = foodPlanner.signIn(deleteUserAuthRequestModel);
-        log.success("Signed in as deleteUser -> " + deleteUser);
+        SimpleMessageResponseModel deleteMessageResponse = foodPlannerAuth.deleteUserWithUsername(deleteTestUser);
+        Assert.assertEquals("deleteMessageResponse does not match!", "User with name " + deleteTestUser + " deleted successfully!", deleteMessageResponse.getMessage());
+        log.success("User deleted successfully!");
 
-        foodPlannerAuth.deleteUser(deleteUserAuthResponse.getId());
-        UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
-                deleteUserAuthResponse.getUsername(),
-                "Test-123"
-        );
         try {
+            UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
+                    deleteTestUser,
+                    "Test-123"
+            );
             foodPlanner.signIn(userAuthRequestModel);
         }
-        catch (FailedCallException e) {
-            log.success("deleteUserTest PASSED!");
-        }
+        catch (FailedCallException e) {log.success("deleteUserTest PASSED!");}
     }
 
     @Test

@@ -1,6 +1,0 @@
-spring:
-  data:
-    mongodb:
-      database: foodplanner
-      host: foodplannermongodb
-      port: 27017
