@@ -121,8 +121,8 @@ public class AppTest {
         log.success("Email verified!");
         Assert.assertEquals("Role does not match!", responseModel.getRoles().get(0).getName(),"ROLE_ADMIN");
         log.success("Role verified!");
-        Assert.assertEquals("Third ingredient does not match!", responseModel.getMenu().get(3).getName(),"Rice");
-        log.success("Added food is verified! -> Rice");
+        Assert.assertTrue("Added random food not found!", responseModel.getMenu().stream().anyMatch(f -> f.getName().equals(randomFoodName)));
+        log.success("Random food is verified! -> " + randomFoodName);
 
         log.success("addFoodTest PASSED!");
     }
