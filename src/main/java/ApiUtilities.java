@@ -5,9 +5,6 @@ import okhttp3.RequestBody;
 import org.junit.Assert;
 import retrofit2.Call;
 import retrofit2.Response;
-import utils.*;
-import utils.mapping.MappingUtilities;
-import utils.reflection.ReflectionUtilities;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +13,20 @@ import static utils.StringUtilities.*;
 import static utils.reflection.ReflectionUtilities.getPreviousMethodName;
 import static utils.reflection.ReflectionUtilities.iterativeConditionalInvocation;
 
+/**
+ * A utility class that provides utility methods for building multipart requests from files,
+ * monitoring HTTP response codes and validating fields in API responses.
+ * <p>
+ * This class also includes helper methods for logging and retry mechanisms to wait for expected
+ * conditions in responses over a time window.
+ * </p>
+ * <p>
+ * This class is intended for use in testing and API integration scenarios.
+ * </p>
+ *
+ * @author Umut Ay Bora
+ * @version 0.0.1 (Documented in 0.0.1, derived from another (Java-Utilities) library)
+ */
 @SuppressWarnings("unused")
 public abstract class ApiUtilities extends Caller {
 

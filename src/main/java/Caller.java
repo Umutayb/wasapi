@@ -27,7 +27,7 @@ import static utils.reflection.ReflectionUtilities.isOfType;
  * a StringUtilities object for string manipulation, and a Printer object for logging.
  *
  * @author Umut Ay Bora
- * @version 1.4.0 (Documented in 1.4.0, released in an earlier version)
+ * @version 0.0.1 (Documented in 0.0.1, derived from another (Java-Utilities) library)
  */
 @SuppressWarnings("unused")
 public abstract class Caller {
@@ -163,48 +163,6 @@ public abstract class Caller {
             return Response.error(response.errorBody(), response.raw());
         }
     }
-
-    ///**
-    // * Clones and logs the given response.
-    // *
-    // * @param call        The original call to execute and log.
-    // * @param printBody   Flag to indicate whether the response body should be logged.
-    // * @return            A new cloned response object.
-    // */
-    //private static Response<ResponseBody> getResponse(Call<okhttp3.ResponseBody> call, boolean printBody) throws IOException {
-    //    Response<ResponseBody> response = call.execute();
-    //    if (response.isSuccessful()) {
-    //        String contentType = response.headers().get("content-type");
-    //        boolean printableResponse = contentType != null && contentType.contains("application/json");
-    //        ResponseBody body = response.body();
-    //        if (keepLogs) log.success("The response code is: " + response.code());
-    //        if (keepLogs && !response.message().isEmpty()) log.info(response.message());
-    //        if (printBody && printableResponse) {
-    //            Object responseBody =  isOfType(response, Object.class) ?
-    //                    getJsonString(getErrorObject(response, Object.class)) :
-    //                    response.raw();
-    //            String errorLog = responseBody.equals("null") ?
-    //                    "The response body is empty." :
-    //                    "The response body is: \n" + responseBody;
-    //            log.warning(errorLog);
-    //        }
-    //        return Response.success(body, response.raw());
-    //    }
-    //    else {
-    //        log.warning("The response code is: " + response.code());
-    //        if (response.message().length()>0) log.warning(response.message());
-    //        if (response.errorBody() != null && printBody) {
-    //            Object errorBody =  isOfType(response, Object.class) ?
-    //                    getJsonString(getErrorObject(response, Object.class)) :
-    //                    response.raw();
-    //            String errorLog = errorBody.equals("null") ?
-    //                    "The error body is empty." :
-    //                    "The error body is: \n" + errorBody;
-    //            log.warning(errorLog);
-    //        }
-    //        return Response.error(response.errorBody(), response.raw());
-    //    }
-    //}
 
     /**
      * Extracts the error object from the given response and attempts to deserialize it into the specified model.

@@ -27,13 +27,38 @@ import static utils.mapping.MappingUtilities.Json.getJsonString;
 import static utils.mapping.MappingUtilities.Json.mapper;
 
 /**
- * The ServiceGenerator class is responsible for generating Retrofit Service based on the provided service class
- * and configurations. It also provides methods to set and get different configurations like headers, timeouts,
- * and base URL.
+ * A utility class for generating Retrofit service instances with flexible HTTP client configurations.
+ * <p>
+ * The {@code ServiceGenerator} class simplifies the creation of Retrofit services by allowing the user
+ * to customize headers, timeouts, logging options, proxy settings, and base URLs. It includes a default
+ * {@link OkHttpClient} setup with interceptors for request logging, header injection, and optional hostname
+ * verification or proxy usage.
+ * </p>
+ * <p>
+ * This class is particularly suited for API testing and integration scenarios where detailed request
+ * inspection, dynamic service generation, and configurable timeouts are critical.
+ * </p>
  *
- * @author Umut Ay Bora
- * @version 1.4.0 (Documented in 1.4.0, released in version 1.0.0)
+ * <h2>Key Features:</h2>
+ * <ul>
+ *     <li>Automatic detection of {@code BASE_URL} from service classes using reflection.</li>
+ *     <li>Support for multiple converter factories (Gson, Jackson, Moshi, Protobuf, etc.).</li>
+ *     <li>Customizable logging of headers and request bodies.</li>
+ *     <li>Built-in support for proxy and redirect handling.</li>
+ *     <li>Convenience methods for static service generation.</li>
+ * </ul>
+ *
+ * <p>
+ * Example usage:
+ * <pre>
+ *     MyApi api = ServiceGenerator.generate(MyApi.class, "https://api.example.com");
+ * </pre>
+ * </p>
+ *
+ * @author Umut Ay Bora, Egecan Sen
+ * @version 0.0.1 (Documented in 0.0.1, derived from another (Java-Utilities) library)
  */
+
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ServiceGenerator {
 

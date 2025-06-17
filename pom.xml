@@ -5,13 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.umutayb</groupId>
-    <artifactId>wasabi</artifactId>
+    <artifactId>wasapi</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
-
-    <name>wasabi</name>
-    <description>API interactions library</description>
-    <url>http://github.com/Umutayb/wasabi</url>
+    <name>wasapi</name>
+    <description>
+        Wasapi is a lightweight, Java-based API utility library that simplifies HTTP service generation and
+        API calls using Retrofit. It abstracts the boilerplate needed to set up and use APIs, making it easier to
+        integrate network calls in your Java applications.
+    </description>
+    <url>http://github.com/Umutayb/wasapi</url>
 
     <licenses>
         <license>
@@ -66,7 +69,7 @@
         <dependency>
             <groupId>io.github.umutayb</groupId>
             <artifactId>Utilities</artifactId>
-            <version>1.7.4-SNAPSHOT</version>
+            <version>1.7.4</version>
         </dependency>
 
         <!-- Context Store -->
@@ -195,64 +198,108 @@
 
     </dependencies>
 
+    <scm>
+        <connection>scm:git:git://github.com/Umutayb/wasapi.git</connection>
+        <developerConnection>scm:git:ssh://github.com/Umutayb/wasapi-api.git</developerConnection>
+        <url>https://github.com/Umutayb/Umutayb/wasapi</url>
+    </scm>
 
     <build>
-        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-            <plugins>
-                <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.4.0</version>
-                </plugin>
-                <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.3.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.4.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.2</version>
-                </plugin>
-                <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.12.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.6.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <directory>${buildDirectory}</directory>
+
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.version}</version>
                 <configuration>
-                    <compilerArgument>-parameters</compilerArgument>
                     <encoding>UTF-8</encoding>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.13</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- GPG Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                            <skip>false</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
+        <testSourceDirectory>src/test/java</testSourceDirectory>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>
