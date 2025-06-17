@@ -51,6 +51,7 @@
         <retrofit.version>2.9.0</retrofit.version>
         <okhttp.version>4.9.3</okhttp.version>
         <java.version>17</java.version>
+        <java.utility.version>1.7.4</java.utility.version>
     </properties>
 
     <dependencyManagement>
@@ -69,7 +70,7 @@
         <dependency>
             <groupId>io.github.umutayb</groupId>
             <artifactId>Utilities</artifactId>
-            <version>1.7.4</version>
+            <version>${java.utility.version}</version>
         </dependency>
 
         <!-- Context Store -->
