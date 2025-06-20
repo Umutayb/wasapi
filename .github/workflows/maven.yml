@@ -25,5 +25,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+      - name: Create Properties File
+        run: |
+          echo "
+            test-secret=secret
+          " >> src/test/resources/secret.properties
       - name: Build & Test
         run: mvn clean test
