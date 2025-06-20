@@ -26,15 +26,11 @@ implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 #### Maven
 
 ```xml
+    <!-- Wasapi -->
 <dependency>
-  <groupId>com.squareup.retrofit2</groupId>
-  <artifactId>retrofit</artifactId>
-  <version>2.9.0</version>
-</dependency>
-<dependency>
-  <groupId>com.squareup.retrofit2</groupId>
-  <artifactId>converter-gson</artifactId>
-  <version>2.9.0</version>
+    <groupId>io.github.umutayb</groupId>
+    <artifactId>wasapi</artifactId>
+    <version>0.0.1</version>
 </dependency>
 ```
 
