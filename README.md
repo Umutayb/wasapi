@@ -26,7 +26,7 @@ implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 #### Maven
 
 ```xml
-    <!-- Wasapi -->
+<!-- Wasapi -->
 <dependency>
     <groupId>io.github.umutayb</groupId>
     <artifactId>wasapi</artifactId>
