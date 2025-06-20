@@ -1,12 +1,13 @@
-import context.ContextStore;
 import models.*;
 import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.http.*;
+import wasapi.WasapiUtilities;
+import wasapi.WasapiClient;
 
-public class FoodPlanner extends ApiUtilities {
+public class FoodPlanner extends WasapiUtilities {
 
-    FoodPlannerServices petStoreServices = new ServiceGenerator.Builder()
+    FoodPlannerServices petStoreServices = new WasapiClient.Builder()
             .logRequestBody(true)
             .printHeaders(true)
             .build(FoodPlannerServices.class);
@@ -23,11 +24,11 @@ public class FoodPlanner extends ApiUtilities {
         return perform(signInCall, true, true);
     }
 
-    static class Auth extends ApiUtilities {
+    static class Auth extends WasapiUtilities {
         FoodPlannerServices.Authorized petStoreServicesAuth;
 
         public Auth(String authorisationToken){
-            petStoreServicesAuth= new ServiceGenerator.Builder()
+            petStoreServicesAuth= new WasapiClient.Builder()
                     .headers(
                             new Headers.Builder()
                                     .add("Authorization", "Bearer " + authorisationToken)

@@ -1,6 +1,7 @@
+package wasapi;
 
-import exceptions.FailedCallException;
-import collections.ResponsePair;
+import wasapi.exceptions.FailedCallException;
+import wasapi.collections.ResponsePair;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.ResponseBody;
@@ -26,7 +27,7 @@ import static utils.reflection.ReflectionUtilities.isOfType;
  * a StringUtilities object for string manipulation, and a Printer object for logging.
  *
  * @author Umut Ay Bora
- * @version 0.0.1 (Documented in 0.0.1, derived from another (Java-Utilities) library)
+ * @version 0.0.1 (Documented in 0.0.1, migrated from another (Java-Utilities) library)
  */
 @SuppressWarnings("unused")
 public abstract class Caller {
@@ -42,7 +43,7 @@ public abstract class Caller {
     private static final Printer log = new Printer(Caller.class);
 
     /**
-     * Constructs a Caller object and initializes the ObjectMapper object and the keepLogs variable.
+     * Constructs a wasapi.Caller object and initializes the ObjectMapper object and the keepLogs variable.
      */
     public Caller(){
         keepLogs = Boolean.parseBoolean(PropertyUtilities.getProperty("keep-api-logs", "true"));

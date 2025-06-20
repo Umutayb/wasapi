@@ -6,9 +6,9 @@
 
     <groupId>io.github.umutayb</groupId>
     <artifactId>wasapi</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>wasapi</name>
+    <name>Wasapi</name>
     <description>
         Wasapi is a lightweight, Java-based API utility library that simplifies HTTP service generation and
         API calls using Retrofit. It abstracts the boilerplate needed to set up and use APIs, making it easier to
@@ -39,7 +39,7 @@
     </developers>
 
     <properties>
-        <buildDirectory>${project.basedir}/out/artifacts/Java-Utilities_jar</buildDirectory>
+        <buildDirectory>${project.basedir}/out/artifacts/${project.artifactId}_jar</buildDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <serenity.maven.version>1.9.12</serenity.maven.version>
         <maven.surefire.version>2.22.1</maven.surefire.version>
@@ -47,11 +47,11 @@
         <context.store.version>1.0.0</context.store.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <java.utility.version>1.7.4</java.utility.version>
         <cucumber.version>4.8.0</cucumber.version>
         <retrofit.version>2.9.0</retrofit.version>
         <okhttp.version>4.9.3</okhttp.version>
         <java.version>17</java.version>
-        <java.utility.version>1.7.4</java.utility.version>
     </properties>
 
     <dependencyManagement>
@@ -283,7 +283,7 @@
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>
                             </gpgArguments>
-                            <skip>false</skip>
+                            <skip>true</skip>
                         </configuration>
                     </execution>
                 </executions>

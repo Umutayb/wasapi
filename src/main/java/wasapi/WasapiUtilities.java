@@ -1,3 +1,5 @@
+package wasapi;
+
 import context.ContextStore;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -28,12 +30,12 @@ import static utils.reflection.ReflectionUtilities.iterativeConditionalInvocatio
  * </p>
  *
  * @author Umut Ay Bora
- * @version 0.0.1 (Documented in 0.0.1, derived from another (Java-Utilities) library)
+ * @version 0.0.1 (Documented in 0.0.1, migrated from another (Java-Utilities) library)
  */
 @SuppressWarnings("unused")
-public abstract class ApiUtilities extends Caller {
+public abstract class WasapiUtilities extends Caller {
 
-    public static Printer log = new Printer(ApiUtilities.class);
+    public static Printer log = new Printer(WasapiUtilities.class);
 
     /**
      * Converts file to multipart
@@ -234,7 +236,7 @@ public abstract class ApiUtilities extends Caller {
                                                            Boolean strict,
                                                            Boolean printBody,
                                                            Boolean printLastCallBody) {
-        Printer log = new Printer(ApiUtilities.class);
+        Printer log = new Printer(WasapiUtilities.class);
         boolean condition;
         Call<?> callClone = call.clone();
         Response<?> response = getResponse(serviceName, callClone, strict, printBody);
@@ -271,7 +273,7 @@ public abstract class ApiUtilities extends Caller {
             String expectedValue,
             boolean printLastCallBody
     ) {
-        Printer log = new Printer(ApiUtilities.class);
+        Printer log = new Printer(WasapiUtilities.class);
         boolean condition;
         Call<SuccessModel> callClone = call.clone();
         Response<SuccessModel> response = getResponse(serviceName, callClone, strict, printBody);

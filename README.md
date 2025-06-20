@@ -6,7 +6,7 @@
 
 * Simplified API service generation
 * Centralized HTTP configuration
-* Easy-to-use `Caller` utility for handling requests
+* Easy-to-use `wasapi.Caller` utility for handling requests
 * Designed with modularity and readability in mind
 
 ## Getting Started
@@ -53,13 +53,15 @@ public interface MyApi {
 ### 2. Create your service instance
 
 ```java
-MyApi api = ServiceGenerator.createService(MyApi.class, "https://api.example.com/");
+import wasapi.WasapiClient;
+
+MyApi api = WasapiClient.createService(MyApi.class, "https://api.example.com/");
 ```
 
-### 3. Make API calls using `Caller`
+### 3. Make API calls using `wasapi.Caller`
 
 ```java
-Caller.call(api.getData(), new ApiCallback<MyResponse>() {
+wasapi.Caller.call(api.getData(), new ApiCallback<MyResponse>() {
     @Override
     public void onSuccess(MyResponse response) {
         // handle success
@@ -74,9 +76,9 @@ Caller.call(api.getData(), new ApiCallback<MyResponse>() {
 
 ## Structure
 
-* **`ServiceGenerator`**: Handles Retrofit service instantiation and base URL setup.
-* **`Caller`**: Utility to execute API calls and process callbacks in a consistent way.
-* **`ApiUtilities`**: A place for common utilities (e.g., logging, checking response success, error parsing, etc.)
+* **`wasapi.WasapiClient`**: Handles Retrofit service instantiation and base URL setup.
+* **`wasapi.Caller`**: Utility to execute API calls and process callbacks in a consistent way.
+* **`wasapi.WasapiUtilities`**: A place for common utilities (e.g., logging, checking response success, error parsing, etc.)
 
 ## Contributing
 

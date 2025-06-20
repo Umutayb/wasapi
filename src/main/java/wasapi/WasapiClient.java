@@ -1,3 +1,5 @@
+package wasapi;
+
 import context.ContextStore;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
@@ -25,9 +27,9 @@ import static utils.mapping.MappingUtilities.Json.getJsonString;
 import static utils.mapping.MappingUtilities.Json.mapper;
 
 /**
- * A utility class for generating Retrofit service instances with flexible HTTP client configurations.
+ * A utility class for generating Wasapi (Retrofit) service instances with flexible HTTP client configurations.
  * <p>
- * The {@code ServiceGenerator} class simplifies the creation of Retrofit services by allowing the user
+ * The {@code wasapi.WasapiClient} class simplifies the creation of Retrofit services by allowing the user
  * to customize headers, timeouts, logging options, proxy settings, and base URLs. It includes a default
  * {@link OkHttpClient} setup with interceptors for request logging, header injection, and optional hostname
  * verification or proxy usage.
@@ -43,22 +45,24 @@ import static utils.mapping.MappingUtilities.Json.mapper;
  *     <li>Support for multiple converter factories (Gson, Jackson, Moshi, Protobuf, etc.).</li>
  *     <li>Customizable logging of headers and request bodies.</li>
  *     <li>Built-in support for proxy and redirect handling.</li>
- *     <li>Convenience methods for static service generation.</li>
+ *     <li>Convenience methods for service generation.</li>
  * </ul>
  *
  * <p>
  * Example usage:
  * <pre>
- *     MyApi api = ServiceGenerator.generate(MyApi.class, "https://api.example.com");
+ *     MyApi api = wasapi.WasapiClient.Builder()
+ *     .baseUrl("https://api.example.com")
+ *     .build(MyApi.class);
  * </pre>
- * </p>
+ * <p>
  *
  * @author Umut Ay Bora, Egecan Sen
- * @version 0.0.1 (Documented in 0.0.1, derived from another (Java-Utilities) library)
+ * @version 0.0.1 (Documented in 0.0.1, migrated from another (Java-Utilities) library)
  */
 
 @SuppressWarnings({"unused", "UnusedReturnValue"})
-public class ServiceGenerator {
+public class WasapiClient {
 
     OkHttpClient client;
 
@@ -130,7 +134,7 @@ public class ServiceGenerator {
     /**
      * The logger object for logging information.
      */
-    private static final Printer log = new Printer(ServiceGenerator.class);
+    private static final Printer log = new Printer(WasapiClient.class);
 
     /**
      * Creates Retrofit Service based on the provided service class and configurations.
@@ -265,13 +269,13 @@ public class ServiceGenerator {
     }
 
     public static class Builder {
-        private final ServiceGenerator generator;
+        private final WasapiClient generator;
 
         /**
          * Initializes a new Builder with default configuration values from ContextStore.
          */
         public Builder() {
-            generator = new ServiceGenerator();
+            generator = new WasapiClient();
             generator.printHeaders = Boolean.parseBoolean(ContextStore.get("log-headers", "true"));
             generator.detailedLogging = Boolean.parseBoolean(ContextStore.get("detailed-logging", "false"));
             generator.hostnameVerification = Boolean.parseBoolean(ContextStore.get("verify-hostname", "true"));
@@ -384,7 +388,7 @@ public class ServiceGenerator {
         }
 
         /**
-         * Builds the service interface directly using the configured ServiceGenerator.
+         * Builds the service interface directly using the configured wasapi.ServiceGenerator.
          */
         public <S> S build(Class<S> serviceClass) {
             return generator.generate(serviceClass);
