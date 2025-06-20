@@ -34,8 +34,6 @@ implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 </dependency>
 ```
 
-> Note: Wasapi itself is a collection of Java utilities. You can clone or include the classes directly until published as a library.
-
 ## Usage
 
 ### 1. Define your API interface
