@@ -1,0 +1,11 @@
+.idea/vcs.xml
+/out/
+/.idea/
+POM-Framework.iml
+*.iml
+.DS_Store
+/inbox/
+src/test/resources/secret.properties
+/target/
+mongo-init.js
+docker-compose.yml
