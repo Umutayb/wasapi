@@ -1,4 +1,5 @@
 # Wasapi
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.umutayb/wasapi?color=brightgreen&label=Wasapi)](https://mvnrepository.com/artifact/io.github.umutayb/wasapi/latest)
 
 **Wasapi** is a lightweight, Java-based API utility library that simplifies HTTP service generation and API calls using Retrofit. It abstracts the boilerplate needed to set up and use APIs, making it easier to integrate network calls in your Java applications.
 
