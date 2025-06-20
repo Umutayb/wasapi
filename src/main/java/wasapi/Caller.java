@@ -75,6 +75,27 @@ public abstract class Caller {
     }
 
     /**
+     * Performs the given call and processes the response. This method provides advanced error handling capabilities.
+     *
+     * @param call The call to be executed. This is a retrofit2.Call object, which represents a request that has been prepared for execution.
+     * @param errorModels Varargs parameter. Each ErrorModel class is used to try to parse the error response if the call was not successful.
+     *
+     * @return A ResponseType object. If the call was successful, this is the body of the response. If the call was not successful and strict is false, this may be a parsed error response, or null if parsing the error response failed.
+     *
+     * @throws FailedCallException If strict is true, and the call failed or the response was not successful.
+     *
+     * @param <SuccessModel> The type of the successful response body.
+     * @param <ReturnType> The type of the return value in this method. This is either SuccessModel or ErrorModel.
+     */
+    @SuppressWarnings("unchecked")
+    protected static <SuccessModel, ReturnType> ReturnType perform(
+            Call<SuccessModel> call,
+            Class<?>... errorModels){
+        Response<?> response = call(call, false, false, getPreviousMethodName());
+        return response.isSuccessful() ? (ReturnType) response.body() : getErrorBody(response, errorModels);
+    }
+
+    /**
      * Gets the response from an API call and logs the results.
      *
      * @param call the Call object representing the API call

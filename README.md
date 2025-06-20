@@ -50,30 +50,35 @@ public interface MyApi {
 ```java
 import wasapi.WasapiClient;
 
-MyApi api = WasapiClient.createService(MyApi.class, "https://api.example.com/");
+MyApiServices api = new WasapiClient.Builder()
+        .baseUrl("https://api.example.com/")
+        .build(MyApiServices.class);
 ```
 
 ### 3. Make API calls using `wasapi.Caller`
 
 ```java
-wasapi.Caller.call(api.getData(), new ApiCallback<MyResponse>() {
-    @Override
-    public void onSuccess(MyResponse response) {
-        // handle success
-    }
+import retrofit2.Call;
+import wasapi.WasapiUtilities;
 
-    @Override
-    public void onError(Throwable t) {
-        // handle error
+class MyApi extends WasapiUtilities {
+
+    MyApiServices api = new WasapiClient.Builder()
+            .baseUrl("https://api.example.com/")
+            .build(MyApiServices.class);
+
+    public static void main(String[] args) {
+        Call apicall = api.myApiCall();
+        perform(apicall);
     }
-});
+}
 ```
 
 ## Structure
 
 * **`wasapi.WasapiClient`**: Handles Retrofit service instantiation and base URL setup.
 * **`wasapi.Caller`**: Utility to execute API calls and process callbacks in a consistent way.
-* **`wasapi.WasapiUtilities`**: A place for common utilities (e.g., logging, checking response success, error parsing, etc.)
+* **`wasapi.WasapiUtilities`**: A utility class that provides utility methods for building multipart requests from files, monitoring HTTP response codes and validating fields in API responses.
 
 ## Contributing
 
