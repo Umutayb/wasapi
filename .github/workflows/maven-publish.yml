@@ -20,6 +20,11 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      - name: Create Properties File
+        run: |
+          echo "
+            test-secret=secret
+          " >> src/test/resources/secret.properties
       - name: Build, Test & Publish
         uses: ncipollo/release-action@v1
         with:
