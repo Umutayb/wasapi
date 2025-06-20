@@ -7,3 +7,5 @@ POM-Framework.iml
 /inbox/
 src/test/resources/secret.properties
 /target/
+mongo-init.js
+docker-compose.yml
