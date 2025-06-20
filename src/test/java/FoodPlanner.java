@@ -6,10 +6,10 @@ import retrofit2.http.*;
 
 public class FoodPlanner extends ApiUtilities {
 
-    FoodPlannerServices petStoreServices = new ServiceGenerator()
-            .setRequestLogging(true)
+    FoodPlannerServices petStoreServices = new ServiceGenerator.Builder()
+            .logRequestBody(true)
             .printHeaders(true)
-            .generate(FoodPlannerServices.class);
+            .build(FoodPlannerServices.class);
 
     public SimpleMessageResponseModel signUp(UserSignUpModel userSignUpModel){
         log.info("Signing up a new user");
@@ -24,9 +24,19 @@ public class FoodPlanner extends ApiUtilities {
     }
 
     static class Auth extends ApiUtilities {
-        FoodPlannerServices.Authorized petStoreServicesAuth = new ServiceGenerator(
-                new Headers.Builder().add("Authorization", "Bearer " + ContextStore.get("jwtToken").toString()).build()
-        ).setRequestLogging(true).printHeaders(true).generate(FoodPlannerServices.Authorized.class);
+        FoodPlannerServices.Authorized petStoreServicesAuth;
+
+        public Auth(String authorisationToken){
+            petStoreServicesAuth= new ServiceGenerator.Builder()
+                    .headers(
+                            new Headers.Builder()
+                                    .add("Authorization", "Bearer " + authorisationToken)
+                                    .build()
+                    )
+                    .logRequestBody(true)
+                    .printHeaders(true)
+                    .build(FoodPlannerServices.Authorized.class);
+        }
 
         public GetUserResponseModel addFood(GetUserResponseModel.Food foodModel){
             log.info("Adding food for the user...");

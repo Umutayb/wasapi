@@ -1,6 +1,7 @@
 
 import exceptions.FailedCallException;
 import context.ContextStore;
+import models.*;
 import org.junit.*;
 import utils.*;
 import java.util.List;
@@ -8,11 +9,11 @@ import java.util.List;
 public class AppTest {
 
     static Printer log = new Printer(AppTest.class);
+    FoodPlanner foodPlanner = new FoodPlanner();
 
     @Before
     public void before(){
         ContextStore.loadProperties("test.properties", "secret.properties");
-        FoodPlanner foodPlanner = new FoodPlanner();
 
         log.info("nice-user authentication is in progress...");
         UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
@@ -20,14 +21,14 @@ public class AppTest {
                 "Test-123"
         );
         UserAuthResponseModel userAuthResponse = foodPlanner.signIn(userAuthRequestModel);
+        log.info(userAuthResponse.getJwtToken());
         ContextStore.put("jwtToken", userAuthResponse.getJwtToken());
         log.success("nice-user authentication is successful!");
     }
 
     @Test
     public void deleteUserTest() {
-        FoodPlanner foodPlanner = new FoodPlanner();
-        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth(ContextStore.get("jwtToken"));
         String deleteTestUser = StringUtilities.generateRandomString(
                 "user",
                 9,
@@ -60,7 +61,6 @@ public class AppTest {
 
     @Test
     public void signUpTest() {
-        FoodPlanner foodPlanner = new FoodPlanner();
         String randomUsername = StringUtilities.generateRandomString(
                 "user",
                 9,
@@ -81,7 +81,6 @@ public class AppTest {
 
     @Test
     public void signInTest() {
-        FoodPlanner foodPlanner = new FoodPlanner();
         UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
                 ContextStore.get("randomUsername"),
                 "Test-123"
@@ -94,29 +93,28 @@ public class AppTest {
 
     @Test
     public void getNiceUserTest() {
-        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth(ContextStore.get("jwtToken"));
         log.info("Acquiring the nice-user food data...");
         GetUserResponseModel getUserResponse = foodPlannerAuth.getUser();
 
-        Assert.assertEquals("Username does not match!", getUserResponse.getUsername(),"nice-user");
+        Assert.assertEquals("Username does not match!", "nice-user", getUserResponse.getUsername());
         log.success("Username verified!");
-        Assert.assertEquals("Email does not match!", getUserResponse.getEmail(),"nice-user@admin.com");
+        Assert.assertEquals("Email does not match!", "nice-user@admin.com", getUserResponse.getEmail());
         log.success("Email verified!");
-        Assert.assertEquals("Role does not match!", getUserResponse.getRoles().get(0).getName(),"ROLE_ADMIN");
+        Assert.assertEquals("Role does not match!", "ROLE_ADMIN", getUserResponse.getRoles().get(0).getName());
         log.success("Role verified!");
-        Assert.assertEquals("First food does not match!", getUserResponse.getMenu().get(0).getName(),"Lasagna");
+        Assert.assertEquals("First food does not match!", "Lasagna", getUserResponse.getMenu().get(0).getName());
         log.success("First food verified! -> lazanya");
-        Assert.assertEquals("Second food does not match!", getUserResponse.getMenu().get(1).getName(),"Grilled Chicken");
+        Assert.assertEquals("Second food does not match!", "Grilled Chicken", getUserResponse.getMenu().get(1).getName());
         log.success("Second food verified! -> chicken breast");
-        Assert.assertEquals("Third food does not match!", getUserResponse.getMenu().get(2).getName(),"Margarita Pizza");
+        Assert.assertEquals("Third food does not match!", "Margarita Pizza", getUserResponse.getMenu().get(2).getName());
         log.success("Third food verified! -> margarita pizza");
-
         log.success("getNiceUserTest PASSED!");
     }
 
     @Test
     public void addFoodTest() {
-        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth(ContextStore.get("jwtToken"));
         String randomFoodName = StringUtilities.generateRandomString(
                 "food",
                 7,
@@ -139,22 +137,21 @@ public class AppTest {
         );
         GetUserResponseModel responseModel = foodPlannerAuth.addFood(food);
 
-        Assert.assertEquals("Username does not match!", responseModel.getUsername(),"nice-user");
+        Assert.assertEquals("Username does not match!", "nice-user", responseModel.getUsername());
         log.success("Username verified!");
-        Assert.assertEquals("Email does not match!", responseModel.getEmail(),"nice-user@admin.com");
+        Assert.assertEquals("Email does not match!", "nice-user@admin.com", responseModel.getEmail());
         log.success("Email verified!");
-        Assert.assertEquals("Role does not match!", responseModel.getRoles().get(0).getName(),"ROLE_ADMIN");
+        Assert.assertEquals("Role does not match!", "ROLE_ADMIN", responseModel.getRoles().get(0).getName());
         log.success("Role verified!");
         Assert.assertTrue("Added random food not found!", responseModel.getMenu().stream().anyMatch(f -> f.getName().equals(randomFoodName)));
         log.success("Random food is verified! -> " + randomFoodName);
-
         log.success("addFoodTest PASSED!");
     }
 
     @Test
     public void logoutTest() {
         FoodPlanner foodPlanner = new FoodPlanner();
-        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth();
+        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth(ContextStore.get("jwtToken"));
 
         String logoutUser = StringUtilities.generateRandomString(
                 "user",

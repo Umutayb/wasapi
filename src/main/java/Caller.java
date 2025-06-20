@@ -10,7 +10,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 import utils.*;
 import utils.mapping.MappingUtilities;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
