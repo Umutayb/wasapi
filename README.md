@@ -61,7 +61,7 @@ class MyApi extends WasapiUtilities {
             .build(MyApiServices.class);
 
     public static void main(String[] args) {
-        Call apicall = api.myApiCall();
+        Call apicall = api.getData();
         perform(apicall);
     }
 }
