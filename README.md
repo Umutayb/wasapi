@@ -32,7 +32,7 @@ Add the required dependency to your project.
 ### 1. Define your API interface
 
 ```java
-public interface MyApi {
+public interface MyApiServices {
     @GET("endpoint")
     Call<MyResponse> getData();
 }
