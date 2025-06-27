@@ -60,9 +60,9 @@ class MyApi extends WasapiUtilities {
             .baseUrl("https://api.example.com/")
             .build(MyApiServices.class);
 
-    public static void main(String[] args) {
+    public MyResponse main(String[] args) {
         Call apicall = api.getData();
-        perform(apicall);
+        return perform(apicall);
     }
 }
 ```
