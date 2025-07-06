@@ -33,3 +33,6 @@ jobs:
           compose-file: "./docker-compose.yml"
       - name: Build & Test
         run: mvn clean test
+      - name: Docker Compose Down
+        if: always()
+        run: docker-compose down
