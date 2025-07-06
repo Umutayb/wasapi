@@ -37,7 +37,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker Compose Down # check if it's in the right place
         if: always()
-        run: docker-compose down
+        run: docker compose down -v
       - name: Publish to the Maven Central Repository
         run: |
           mvn \
