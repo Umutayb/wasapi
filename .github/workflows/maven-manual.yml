@@ -27,10 +27,9 @@ jobs:
           echo "
             test-secret=secret
           " >> src/test/resources/secret.properties
-      - name: Run docker compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./docker-compose.yml"
+      - name: Start Unit Test DB
+        run: |
+          docker compose up --build -d
       - name: Build & Test
         run: mvn clean test
       - name: Docker Compose Down

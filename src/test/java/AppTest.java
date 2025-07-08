@@ -26,11 +26,8 @@ public class AppTest {
         log.success("nice-user authentication is successful!");
     }
 
-
     @After
     public void after(){
-        ContextStore.loadProperties("test.properties", "secret.properties");
-
         log.info("nice-user authentication is in progress...");
         UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
                 "nice-user",
