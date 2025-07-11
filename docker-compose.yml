@@ -1,0 +1,25 @@
+services:
+
+  mongodb:
+    image: zanmaster/custom-mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: Secret-123
+      MONGO_INITDB_DATABASE: food-planner-db
+
+    ports:
+      - 27017:27017
+
+  food-planner:
+    image: zanmaster/food-planner:latest
+    container_name: food-planner
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://test:Secret-123@mongodb:27017/food-planner-db?authSource=admin
+      - SERVER_PORT=5001
+    depends_on:
+      - mongodb
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
