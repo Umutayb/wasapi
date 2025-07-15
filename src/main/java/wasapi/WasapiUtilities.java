@@ -111,7 +111,7 @@ public abstract class WasapiUtilities extends Caller {
                 () -> {
                     boolean condition;
                     Call<?> callClone = call.clone();
-                    Response<?> response = getResponse(serviceName, callClone, false, false);
+                    Response<?> response = getResponse(serviceName, callClone, false, logResponseBody);
                     condition = response.code() == expectedCode;
                     if (condition) {
                         log.success("Status code verified as " + expectedCode + "!");
@@ -144,8 +144,6 @@ public abstract class WasapiUtilities extends Caller {
                         serviceName,
                         expectedCode,
                         call,
-                        false,
-                        false,
                         printLastCallBody
                 )
         );
@@ -169,14 +167,7 @@ public abstract class WasapiUtilities extends Caller {
         String serviceName = getPreviousMethodName();
         boolean codeMatch = iterativeConditionalInvocation(
                 timeoutInSeconds,
-                () -> responseCodeMatch(
-                        serviceName,
-                        expectedCode,
-                        call,
-                        false,
-                        false,
-                        false
-                )
+                () -> responseCodeMatch(serviceName, expectedCode, call, false)
         );
         Assert.assertTrue("Response code did not match the expected code " + expectedCode + " within " + timeoutInSeconds + " seconds!", codeMatch);
         return ContextStore.get("monitorResponseCodeResponse");
@@ -204,8 +195,6 @@ public abstract class WasapiUtilities extends Caller {
                 () -> fieldValueMatch(
                         serviceName,
                         call,
-                        false,
-                        false,
                         fieldName,
                         expectedValue,
                         printLastCallBody
@@ -224,8 +213,6 @@ public abstract class WasapiUtilities extends Caller {
      * @param serviceName The name of the service for identification purposes.
      * @param expectedCode The expected HTTP response code.
      * @param call The network call to inspect.
-     * @param strict If true, performs strict checking of the response code.
-     * @param printBody If true, prints the response body.
      * @param printLastCallBody If true, prints the response body of the last call.
      * @return True if the response code matches the expected code; otherwise, false.
      */
@@ -233,21 +220,20 @@ public abstract class WasapiUtilities extends Caller {
     public static <SuccessModel> boolean responseCodeMatch(String serviceName,
                                                            int expectedCode,
                                                            Call<SuccessModel> call,
-                                                           Boolean strict,
-                                                           Boolean printBody,
-                                                           Boolean printLastCallBody) {
+                                                           boolean printLastCallBody) {
         Printer log = new Printer(WasapiUtilities.class);
         boolean condition;
         Call<?> callClone = call.clone();
-        Response<?> response = getResponse(serviceName, callClone, strict, printBody);
+        Response<?> response = getResponse(serviceName, callClone);
         condition = response.code() == expectedCode;
         if (condition) {
-            if (printLastCallBody) {
-                log.info("Response body: " + MappingUtilities.Json.getJsonStringFor(response.body()));
-            }
             log.success("Status code verified as " + expectedCode + "!");
             ContextStore.put("monitorResponseCodeResponse", response);
         }
+        if (condition && printLastCallBody)
+            log.info("Response body: " + MappingUtilities.Json.getJsonStringFor(response.body()));
+        else if (printLastCallBody)
+            log.info("Response body: " + MappingUtilities.Json.getJsonStringFor(response.errorBody()));
         return condition;
     }
 
@@ -257,8 +243,6 @@ public abstract class WasapiUtilities extends Caller {
      * @param <SuccessModel> The type of the expected response model.
      * @param serviceName The name of the service for identification purposes.
      * @param call The network call to inspect.
-     * @param strict If true, performs strict checking of the response code.
-     * @param printBody If true, prints the response body.
      * @param fieldName The name of the field to inspect.
      * @param expectedValue The expected field value to match.
      * @param printLastCallBody If true, prints the response body of the last call.
@@ -267,8 +251,6 @@ public abstract class WasapiUtilities extends Caller {
     public static <SuccessModel> boolean fieldValueMatch(
             String serviceName,
             Call<SuccessModel> call,
-            boolean strict,
-            boolean printBody,
             String fieldName,
             String expectedValue,
             boolean printLastCallBody
@@ -276,7 +258,7 @@ public abstract class WasapiUtilities extends Caller {
         Printer log = new Printer(WasapiUtilities.class);
         boolean condition;
         Call<SuccessModel> callClone = call.clone();
-        Response<SuccessModel> response = getResponse(serviceName, callClone, strict, printBody);
+        Response<SuccessModel> response = getResponse(serviceName, callClone);
         SuccessModel responseBody = response.body();
         if (responseBody == null) return false;
         condition = ReflectionUtilities.getField(fieldName, responseBody).toString().equals(expectedValue);
