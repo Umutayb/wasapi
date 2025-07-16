@@ -25,12 +25,18 @@ jobs:
           echo "
             test-secret=secret
           " >> src/test/resources/secret.properties
+      - name: Start Unit Test DB
+        run: |
+          docker compose up --build -d
       - name: Build, Test & Publish
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifacts: "${{ github.workspace }}/out/artifacts/wasapi_jar/*.jar"
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker Compose Down # check if it's in the right place
+        if: always()
+        run: docker compose down -v
       - name: Publish to the Maven Central Repository
         run: |
           mvn \

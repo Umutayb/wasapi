@@ -27,5 +27,11 @@ jobs:
           echo "
             test-secret=secret
           " >> src/test/resources/secret.properties
+      - name: Start Unit Test DB
+        run: |
+          docker compose up --build -d
       - name: Build & Test
         run: mvn clean test
+      - name: Docker Compose Down
+        if: always()
+        run: docker compose down -v
