@@ -1,7 +1,7 @@
 services:
 
   mongodb:
-    image: zanmaster/custom-mongo:latest
+    image: zanmaster/custom-mongo:1.0
     container_name: mongodb
     restart: always
     environment:
@@ -13,7 +13,7 @@ services:
       - 27017:27017
 
   food-planner:
-    image: zanmaster/food-planner:latest
+    image: zanmaster/food-planner:1.0
     container_name: food-planner
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://test:Secret-123@mongodb:27017/food-planner-db?authSource=admin
