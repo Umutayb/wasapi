@@ -8,4 +8,3 @@ POM-Framework.iml
 src/test/resources/secret.properties
 /target/
 mongo-init.js
-docker-compose.yml
