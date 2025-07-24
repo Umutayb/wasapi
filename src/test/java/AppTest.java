@@ -10,11 +10,24 @@ public class AppTest {
 
     static Printer log = new Printer(AppTest.class);
     FoodPlanner foodPlanner = new FoodPlanner();
-/*
+
     @Before
     public void before(){
         ContextStore.loadProperties("test.properties", "secret.properties");
 
+        log.info("nice-user authentication is in progress...");
+        UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
+                "nice-user",
+                "Test-123"
+        );
+        UserAuthResponseModel userAuthResponse = foodPlanner.signIn(userAuthRequestModel);
+        log.info(userAuthResponse.getJwtToken());
+        ContextStore.put("jwtToken", userAuthResponse.getJwtToken());
+        log.success("nice-user authentication is successful!");
+    }
+
+    @After
+    public void after(){
         log.info("nice-user authentication is in progress...");
         UserAuthRequestModel userAuthRequestModel = new UserAuthRequestModel(
                 "nice-user",
@@ -114,7 +127,6 @@ public class AppTest {
 
     @Test
     public void addFoodTest() {
-        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth(ContextStore.get("jwtToken"));
         String randomFoodName = StringUtilities.generateRandomString(
                 "food",
                 7,
@@ -126,16 +138,7 @@ public class AppTest {
                 1,
                 "1"
         );
-        GetUserResponseModel.Food food = new GetUserResponseModel.Food(
-                randomFoodName,
-                "randomFood",
-                List.of(ingredient),
-                List.of("Pasta"),
-                "Main",
-                true,
-                "test recipe 01"
-        );
-        GetUserResponseModel responseModel = foodPlannerAuth.addFood(food);
+        GetUserResponseModel responseModel = addOrUpdateFood(ingredient, randomFoodName);
 
         Assert.assertEquals("Username does not match!", "nice-user", responseModel.getUsername());
         log.success("Username verified!");
@@ -146,6 +149,20 @@ public class AppTest {
         Assert.assertTrue("Added random food not found!", responseModel.getMenu().stream().anyMatch(f -> f.getName().equals(randomFoodName)));
         log.success("Random food is verified! -> " + randomFoodName);
         log.success("addFoodTest PASSED!");
+    }
+
+    public GetUserResponseModel addOrUpdateFood(GetUserResponseModel.Food.Ingredient ingredient, String foodName) {
+        FoodPlanner.Auth foodPlannerAuth = new FoodPlanner.Auth(ContextStore.get("jwtToken"));
+        GetUserResponseModel.Food food = new GetUserResponseModel.Food(
+                foodName,
+                "randomFood",
+                List.of(ingredient),
+                List.of("Pasta"),
+                "Main",
+                true,
+                "test recipe 01"
+        );
+        return foodPlannerAuth.addFood(food);
     }
 
     @Test
@@ -208,5 +225,4 @@ public class AppTest {
         } catch (FailedCallException e) { log.success("logoutTest PASSED!");}
 
     }
-*/
 }
