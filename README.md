@@ -23,7 +23,7 @@ Add the required dependency to your project.
 <dependency>
     <groupId>io.github.umutayb</groupId>
     <artifactId>wasapi</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
