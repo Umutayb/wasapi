@@ -182,16 +182,18 @@ public abstract class Caller {
         }
         else {
             log.warning("The response code is: " + response.code());
-            if (response.message().length()>0) log.warning(response.message());
-            if (response.errorBody() != null && printBody) {
-                Object errorBody =  isOfType(response, Object.class) ?
-                        getJsonString(getErrorObject(response, Object.class)) :
-                        response.errorBody().string();
-                String errorLog = errorBody.equals("null") ?
-                        "The error body is empty." :
-                        "The error body is: \n" + errorBody;
-                log.warning(errorLog);
-            }
+            if (!response.message().isEmpty()) log.warning(response.message());
+            if (printBody)
+                try (Buffer errorBuffer = response.errorBody().source().getBuffer().clone()) {
+                    String bodyString = errorBuffer.readString(StandardCharsets.UTF_8);
+
+                    String errorLog = bodyString.equals("null") || bodyString.isBlank() ?
+                            "The error body is empty." :
+                            "The error body is: \n" + bodyString;
+                    log.warning(errorLog);
+                }
+
+
             return Response.error(response.errorBody(), response.raw());
         }
     }
@@ -212,7 +214,6 @@ public abstract class Caller {
      */
     @SuppressWarnings("unchecked")
     private static <ErrorModel> ErrorModel getErrorObject(Response<?> response, Class<ErrorModel> errorModel) throws JsonProcessingException {
-        assert response.errorBody() != null;
         if (errorModel.isAssignableFrom(ResponseBody.class))
             return (ErrorModel) response.errorBody();
         try (Buffer errorBuffer = response.errorBody().source().getBuffer().clone()) {
