@@ -33,7 +33,7 @@ jobs:
           mvn \
             --no-transfer-progress \
             --batch-mode \
-            deploy
+            deploy -X 
       - name: Docker Compose Down # check if it's in the right place
         if: always()
         run: docker compose down -v
