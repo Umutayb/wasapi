@@ -28,12 +28,6 @@ jobs:
       - name: Start Unit Test DB
         run: |
           docker compose up --build -d
-      - name: Build, Test & Publish
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: "${{ github.workspace }}/out/artifacts/wasapi_jar/*.jar"
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to the Maven Central Repository
         run: |
           mvn \
