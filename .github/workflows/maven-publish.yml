@@ -36,10 +36,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to the Maven Central Repository
         run: |
-          mvn \
-            --no-transfer-progress \
-            --batch-mode \
-            deploy
+          mvn --no-transfer-progress \
+              --batch-mode \
+              deploy \
+              -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
       - name: Docker Compose Down # check if it's in the right place
         if: always()
         run: docker compose down -v
