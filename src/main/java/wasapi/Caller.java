@@ -133,6 +133,17 @@ public abstract class Caller {
     }
 
     /**
+     * Gets the response from an API call and logs the results.
+     *
+     * @param call the Call object representing the API call
+     * @return the Response object representing the API response
+     * @throws FailedCallException if the call is strict and the response is not successful
+     */
+    protected static <Model> Response<Model> getResponse(String serviceName, Call<Model> call){
+        return call(call, false, logResponseBody, serviceName);
+    }
+
+    /**
      * Executes the given call and returns a Pair containing the response and potential error model.
      * This method provides advanced error handling capabilities.
      *
