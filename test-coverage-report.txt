@@ -1,0 +1,26 @@
+
+=== API COVERAGE REPORT ===
+
+ApiCall: 6/6
+  [x] clone
+  [x] perform
+  [x] getResponse
+  [x] getResponsePair
+  [x] monitorResponseCode
+  [x] monitorFieldValue
+
+ApiResponse: 3/3
+  [x] isSuccessful
+  [x] errorBody
+  [x] fromFetch
+
+ResponsePair: 1/1
+  [x] isError
+
+WasapiClient: 2/2
+  [x] execute
+  [x] build
+
+OVERALL: 12/12 (100.0%)
+THRESHOLD: 100%
+STATUS: PASSED

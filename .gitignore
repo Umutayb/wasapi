@@ -1,10 +1,6 @@
-.idea/vcs.xml
-/out/
-/.idea/
-POM-Framework.iml
-*.iml
+/dist
+/node_modules
+*.tgz
 .DS_Store
-/inbox/
-src/test/resources/secret.properties
-/target/
-mongo-init.js
+.env
+.env.local
