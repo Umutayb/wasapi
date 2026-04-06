@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Annotation profile for Wasapi" enabled="true">
+        <sourceOutputDir name="out/artifacts/wasapi_jar/generated-sources/annotations" />
+        <sourceTestOutputDir name="out/artifacts/wasapi_jar/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="wasapi" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
